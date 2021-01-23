@@ -1,7 +1,5 @@
 [requires]
-boost/1.73.0
 libgit2/1.0.1
-tabulate/1.3
 argparse/2.1
 
 [generators]

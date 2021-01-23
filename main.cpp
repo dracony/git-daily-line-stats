@@ -1,6 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <tabulate/table.hpp>
 #include <git2.h>
 #include <map>
 #include <unordered_set>
@@ -8,7 +7,6 @@
 #include <argparse/argparse.hpp>
 #include <utility>
 
-using namespace tabulate;
 using namespace std;
 
 typedef unsigned int ui;
@@ -87,7 +85,7 @@ public:
             string message(git_commit_message(commit));
 
             if (git_commit_parentcount(commit) != 1) {
-                cout << "Skipping commit " << git_commit_summary(commit) << endl;
+                //cout << "Skipping commit " << git_commit_summary(commit) << endl;
                 continue;
             }
 
@@ -112,27 +110,16 @@ public:
     }
 
     void renderTable() {
-        Table table;
-        int row(0);
-
-        table.add_row({"Author", "Commits", "Lines added", "Lines deleted"});
-        table.row(row++).format()
-                .font_style({FontStyle::bold})
-                .font_background_color(Color::green);
-
         for(auto &dl: dateLineStatsMap) {
-            table.add_row({dl.second.date});
-            table.row(row++).format()
-                    .font_style({FontStyle::bold})
-                    .font_background_color(Color::cyan);
+            cout << dl.second.date << ":" << endl;
             for (auto &p: dl.second.lineStats) {
                 auto stats = p.second;
-                table.add_row({stats.author, to_string(stats.commits), to_string(stats.linesAdded), to_string(stats.linesRemoved)});
-                ++row;
+                cout << "\t" << stats.author << ":" << endl
+                    << "\t\tCommits: " << stats.commits << endl
+                    << "\t\tAdded lines : " << stats.linesAdded << endl
+                    << "\t\tRemoved lines : " << stats.linesRemoved << endl;
             }
         }
-
-        std::cout << table << std::endl;
     }
 
     static unique_ptr<CommitSet> findCommits(git_repository *repo, ui nDays) {
@@ -150,7 +137,7 @@ public:
             const char* branchName;
             git_branch_name(&branchName, branch);
 
-            cout << "Scanning branch " << branchName << endl;
+            //cout << "Scanning branch " << branchName << endl;
 
             git_reference_resolve(&branch, branch);
             const git_oid *headId = git_reference_target(branch);
