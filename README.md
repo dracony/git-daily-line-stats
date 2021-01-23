@@ -10,7 +10,7 @@ Output for this repo
 
 ```
 2021/01/23:
-        Roman Tsiupa:
+        Dracony:
                 Commits: 2
                 Added lines : 20
                 Removed lines : 40
