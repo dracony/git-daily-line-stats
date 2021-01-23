@@ -4,7 +4,7 @@
 #include <map>
 #include <unordered_set>
 #include <ctime>
-#include <argparse/argparse.hpp>
+#include <args.hxx>
 #include <utility>
 
 using namespace std;
@@ -217,28 +217,23 @@ public:
     }
 };
 
-int main(int argc, char *argv[]) {
-    argparse::ArgumentParser params("code stats");
-    params.add_argument("path")
-            .help("path to the repo");
+int main(int argc, char **argv) {
+    args::ArgumentParser parser("Prints daily code line stats");
+    args::Positional<std::string> path(parser, "path", "Path to repo");
+    args::Positional<int> days(parser, "days", "Number of trailing days to print");
 
-    params.add_argument("numberOfDays")
-            .help("number of days to display information for")
-            .action([](const std::string& value) { return std::stoi(value); });
-
-    try {
-        params.parse_args(argc, argv);
-    }
-    catch (const std::runtime_error& err) {
-        std::cout << err.what() << std::endl;
-        std::cout << params;
-        exit(0);
+    try
+    {
+        parser.ParseCLI(argc, argv);
+    } catch (exception &err) {
+        std::cout << parser;
+        return 1;
     }
 
     RepoStats repoStats;
 
     try {
-        repoStats.run(params.get("path"), params.get<int>("numberOfDays"));
+        repoStats.run(args::get(path), args::get(days));
     } catch (exception &err) {
         cout << err.what();
         return 1;

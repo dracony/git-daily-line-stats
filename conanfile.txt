@@ -1,6 +1,6 @@
 [requires]
 libgit2/1.0.1
-argparse/2.1
+taywee-args/6.2.4
 
 [generators]
 cmake
